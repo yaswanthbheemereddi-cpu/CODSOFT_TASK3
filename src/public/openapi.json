@@ -1,0 +1,114 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "CodSoft Task 3 - To-Do List REST API",
+    "version": "1.0.0",
+    "description": "Production REST API for Task Management with JWT Auth, categories, priorities, due dates, and full CRUD.",
+    "contact": {
+      "name": "Bheemereddi Yaswanth Durga Bose",
+      "email": "yaswanth@codsoft.dev"
+    }
+  },
+  "servers": [
+    {
+      "url": "http://localhost:3003",
+      "description": "Local Development Server"
+    }
+  ],
+  "paths": {
+    "/api/auth/register": {
+      "post": {
+        "summary": "Register a new user",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["name", "email", "password"],
+                "properties": {
+                  "name": { "type": "string" },
+                  "email": { "type": "string" },
+                  "password": { "type": "string" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "User registered" }
+        }
+      }
+    },
+    "/api/auth/login": {
+      "post": {
+        "summary": "Login and receive JWT Token",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["email", "password"],
+                "properties": {
+                  "email": { "type": "string" },
+                  "password": { "type": "string" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Authentication successful" }
+        }
+      }
+    },
+    "/api/tasks": {
+      "get": {
+        "summary": "Get all tasks with filtering & pagination",
+        "parameters": [
+          { "name": "search", "in": "query", "schema": { "type": "string" } },
+          { "name": "is_completed", "in": "query", "schema": { "type": "string" } },
+          { "name": "priority", "in": "query", "schema": { "type": "string" } },
+          { "name": "category", "in": "query", "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": { "description": "List of tasks" }
+        }
+      },
+      "post": {
+        "summary": "Create a new task",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["title"],
+                "properties": {
+                  "title": { "type": "string" },
+                  "description": { "type": "string" },
+                  "priority": { "type": "string", "enum": ["low", "medium", "high", "urgent"] },
+                  "category": { "type": "string", "enum": ["work", "study", "personal", "other"] },
+                  "due_date": { "type": "string", "format": "date" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "Task created" }
+        }
+      }
+    },
+    "/api/tasks/{id}/toggle": {
+      "patch": {
+        "summary": "Toggle task completed / pending status",
+        "parameters": [{ "name": "id", "in": "path", "required": true }],
+        "responses": {
+          "200": { "description": "Toggled status" }
+        }
+      }
+    }
+  }
+}
